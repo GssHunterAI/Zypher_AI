@@ -31,13 +31,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Prepare demo for deployment
+        run: |
+          mkdir -p _site
+          cp -r demo/* _site/
+          rm -f _site/README.md
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
       - name: Upload demo artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './demo'
+          path: './_site'
       
       - name: Deploy to GitHub Pages
         id: deployment
