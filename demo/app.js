@@ -28,28 +28,24 @@ const mockResponses = {
         image: null
     },
     "modern tech startup": {
-        text: "I've created a modern tech startup logo with a sleek rocket symbol. The design features:\n\n✨ Clean geometric shapes\n✨ Vibrant gradient colors (blue to purple)\n✨ Modern sans-serif typography\n✨ Perfect for tech companies\n\nThe rocket symbolizes innovation, growth, and forward momentum - perfect for a startup!",
+        text: "I've created a modern tech startup logo for you! This design showcases:\n\n✨ Professional and contemporary aesthetic\n✨ Clean, memorable design elements\n✨ Strong visual identity\n✨ Perfect for innovative companies\n\nThis logo represents innovation, growth, and forward-thinking - ideal for a modern tech startup!",
         image: "assets/demo-logo-1.png"
     },
     "coffee shop": {
-        text: "Here's a minimalist coffee shop logo with warm, inviting elements:\n\n☕ Stylized coffee cup icon\n☕ Warm brown and cream color palette\n☕ Elegant, readable typography\n☕ Cozy, artisanal feel\n\nThis design conveys quality, warmth, and the perfect coffee experience!",
+        text: "Here's a beautiful coffee shop logo designed for you:\n\n☕ Inviting and memorable design\n☕ Warm, welcoming aesthetic\n☕ Professional and approachable\n☕ Perfect for cafes and coffee brands\n\nThis design captures the essence of quality, comfort, and the perfect coffee experience!",
         image: "assets/demo-logo-2.png"
     },
-    "eco-friendly": {
-        text: "I've generated an eco-friendly brand logo with a beautiful green leaf design:\n\n🌿 Organic leaf symbol\n🌿 Natural green color palette\n🌿 Clean, modern typography\n🌿 Sustainable and fresh aesthetic\n\nPerfect for environmentally conscious brands and organic products!",
-        image: "assets/demo-logo-3.png"
-    },
     "fitness brand": {
-        text: "Here's a vibrant fitness brand logo with dynamic energy:\n\n💪 Bold, athletic design\n💪 Energetic color scheme\n💪 Strong, impactful typography\n💪 Movement and strength symbolism\n\nThis logo captures the power and motivation of fitness!",
+        text: "Here's a dynamic fitness brand logo designed for you:\n\n💪 Bold and energetic design\n💪 Strong visual impact\n💪 Athletic and motivational\n💪 Perfect for gyms and fitness brands\n\nThis logo captures power, energy, and motivation - ideal for the fitness industry!",
         image: "assets/demo-logo-3.png"
     },
     "law firm": {
-        text: "I've created a professional law firm logo with traditional elegance:\n\n⚖️ Classic symbolism (scales/pillars)\n⚖️ Sophisticated blue and gold colors\n⚖️ Traditional serif typography\n⚖️ Trust and authority conveyed\n\nThis design projects professionalism and reliability for legal services.",
+        text: "I've created a professional law firm logo for you:\n\n⚖️ Sophisticated and trustworthy design\n⚖️ Professional aesthetic\n⚖️ Strong sense of authority\n⚖️ Classic and timeless appeal\n\nThis design projects professionalism, trust, and credibility - perfect for legal services.",
         image: "assets/demo-logo-4.png"
     },
     "default": {
         text: "I've created a custom logo based on your description. In the full version, this would be generated using advanced AI models (Flux Schnell). This demo shows a sample output to give you an idea of the quality and style you can expect.\n\nThe actual application uses:\n• Flux Schnell AI model\n• Optional LoRA fine-tuning\n• Reference image influence\n• Customizable dimensions\n• Professional quality output",
-        image: "assets/demo-logo-default.png"
+        image: "assets/zypher.jpeg"
     }
 };
 
@@ -121,8 +117,6 @@ function generateMockResponse(userMessage) {
         response = mockResponses["modern tech startup"];
     } else if (lowerMessage.includes('coffee') || lowerMessage.includes('cafe') || lowerMessage.includes('minimalist')) {
         response = mockResponses["coffee shop"];
-    } else if (lowerMessage.includes('eco') || lowerMessage.includes('green') || lowerMessage.includes('leaf') || lowerMessage.includes('organic')) {
-        response = mockResponses["eco-friendly"];
     } else if (lowerMessage.includes('fitness') || lowerMessage.includes('gym') || lowerMessage.includes('vibrant') || lowerMessage.includes('sport')) {
         response = mockResponses["fitness brand"];
     } else if (lowerMessage.includes('law') || lowerMessage.includes('legal') || lowerMessage.includes('professional')) {
