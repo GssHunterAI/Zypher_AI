@@ -24,16 +24,6 @@ function generateConversationId() {
     return 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
-// New chat function
-function newChat() {
-    conversationHistory = [];
-    mistralConversationHistory = [];
-    currentConversationId = generateConversationId(); // Generate new conversation ID
-    document.getElementById('messages').innerHTML = '';
-    document.getElementById('welcomeScreen').style.display = 'flex';
-    document.getElementById('promptInput').value = '';
-    focusInput();
-}
 // Initialize conversation ID on page load
 document.addEventListener('DOMContentLoaded', () => {
     currentConversationId = generateConversationId();
@@ -321,6 +311,12 @@ async function sendMessage() {
                                         <span class="metadata-label">Model:</span>
                                         <span>${generateData.metadata.model}</span>
                                     </div>
+                                    ${generateData.metadata.lora ? `
+                                    <div class="metadata-row">
+                                        <span class="metadata-label">LoRA:</span>
+                                        <span>${generateData.metadata.lora}</span>
+                                    </div>
+                                    ` : ''}
                                     <div class="metadata-row">
                                         <span class="metadata-label">Steps:</span>
                                         <span>${generateData.metadata.steps}</span>
@@ -329,6 +325,12 @@ async function sendMessage() {
                                         <span class="metadata-label">Dimensions:</span>
                                         <span>${generateData.metadata.dimensions}</span>
                                     </div>
+                                    ${generateData.metadata.ip_adapter_scale ? `
+                                    <div class="metadata-row">
+                                        <span class="metadata-label">IP-Adapter Scale:</span>
+                                        <span>${generateData.metadata.ip_adapter_scale}</span>
+                                    </div>
+                                    ` : ''}
                                     <div class="metadata-row">
                                         <span class="metadata-label">Generated:</span>
                                         <span>${generateData.metadata.timestamp}</span>
@@ -667,43 +669,58 @@ function toggleSidebar() {
 // Toggle settings modal
 function toggleSettings() {
     const modal = document.getElementById('settingsModal');
+    const isOpening = !modal.classList.contains('active');
     modal.classList.toggle('active');
 
-    // Load current settings
-    const useLoraToggle = document.getElementById('useLoraToggle');
-    const loraSelect = document.getElementById('loraSelect');
-    const stepsSlider = document.getElementById('stepsSlider');
-    const widthSlider = document.getElementById('widthSlider');
-    const heightSlider = document.getElementById('heightSlider');
+    // Only load settings when opening the modal
+    if (isOpening) {
+        // Load current settings
+        const useLoraToggle = document.getElementById('useLoraToggle');
+        const loraSelect = document.getElementById('loraSelect');
+        const stepsSlider = document.getElementById('stepsSlider');
+        const widthSlider = document.getElementById('widthSlider');
+        const heightSlider = document.getElementById('heightSlider');
 
-    if (useLoraToggle) {
-        useLoraToggle.checked = currentSettings.use_lora;
-        toggleLoraSettings(); // Show/hide LoRA selection based on checkbox
-    }
-    if (loraSelect && currentSettings.lora_filename) {
-        loraSelect.value = currentSettings.lora_filename;
-    }
-    if (stepsSlider) stepsSlider.value = currentSettings.num_steps;
-    if (widthSlider) widthSlider.value = currentSettings.width;
-    if (heightSlider) heightSlider.value = currentSettings.height;
+        if (useLoraToggle) {
+            useLoraToggle.checked = currentSettings.use_lora;
+            toggleLoraSettings(); // Show/hide LoRA selection based on checkbox
+        }
+        
+        // Ensure LoRA dropdown is populated before setting value
+        if (loraSelect) {
+            // Wait for LoRA list to be loaded if not already
+            if (availableLoras.length > 0 && currentSettings.lora_filename) {
+                loraSelect.value = currentSettings.lora_filename;
+            } else if (currentSettings.lora_filename) {
+                // Force reload LoRA list and then set value
+                loadAvailableLoras().then(() => {
+                    if (loraSelect) {
+                        loraSelect.value = currentSettings.lora_filename;
+                    }
+                });
+            }
+        }
+        
+        if (stepsSlider) stepsSlider.value = currentSettings.num_steps;
+        if (widthSlider) widthSlider.value = currentSettings.width;
+        if (heightSlider) heightSlider.value = currentSettings.height;
 
-    updateStepsValue(currentSettings.num_steps);
-    updateWidthValue(currentSettings.width);
-    updateHeightValue(currentSettings.height);
+        updateStepsValue(currentSettings.num_steps);
+        updateWidthValue(currentSettings.width);
+        updateHeightValue(currentSettings.height);
 
-    // Populate profile fields if available
-    const fnameEl = document.getElementById('fnameInput');
-    const lnameEl = document.getElementById('lnameInput');
-    if (userProfile) {
-        if (fnameEl) fnameEl.value = userProfile.fname || '';
-        if (lnameEl) lnameEl.value = userProfile.lname || '';
-    } else {
-        if (fnameEl) fnameEl.value = '';
-        if (lnameEl) lnameEl.value = '';
-    }
+        // Populate profile fields if available
+        const fnameEl = document.getElementById('fnameInput');
+        const lnameEl = document.getElementById('lnameInput');
+        if (userProfile) {
+            if (fnameEl) fnameEl.value = userProfile.fname || '';
+            if (lnameEl) lnameEl.value = userProfile.lname || '';
+        } else {
+            if (fnameEl) fnameEl.value = '';
+            if (lnameEl) lnameEl.value = '';
+        }
 
-    // Reload LoRA list to get latest
-    if (modal.classList.contains('active')) {
+        // Reload LoRA list to get latest
         loadAvailableLoras();
     }
 }
@@ -774,8 +791,11 @@ function removeReferenceImage(event) {
 document.addEventListener('change', (e) => {
     if (e.target.id === 'useLoraToggle') {
         currentSettings.use_lora = e.target.checked;
+        console.log('LoRA enabled:', currentSettings.use_lora);
+        toggleLoraSettings();
     } else if (e.target.id === 'loraSelect') {
         currentSettings.lora_filename = e.target.value || null;
+        console.log('LoRA filename selected:', currentSettings.lora_filename);
     }
 });
 
